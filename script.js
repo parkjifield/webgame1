@@ -10,7 +10,7 @@ let name;
 function createRoom() {
     room = document.getElementById('room').value;
     name = document.getElementById('name').value;
-    socket = new WebSocket('ws://localhost:8080');
+    socket = new WebSocket('wss://investment-game-server.herokuapp.com');
 
     socket.onopen = () => {
         socket.send(JSON.stringify({ type: 'create_room', room: room }));
@@ -63,4 +63,55 @@ function joinRoom() {
             updatePlayers(data.players);
             displayInvestments();
         } else if (data.type === 'game_over') {
-            document.getElementBy
+            document.getElementById('game').classList.add('hidden');
+            displayResults(data.players);
+        }
+    };
+}
+
+function updatePlayers(playersData) {
+    players = playersData;
+    const playerInvestmentsDiv = document.getElementById('playerInvestments');
+    playerInvestmentsDiv.innerHTML = '';
+    players.forEach(player => {
+        const playerDiv = document.createElement('div');
+        playerDiv.innerText = `${player.name}: $${player.balance.toFixed(2)}`;
+        playerInvestmentsDiv.appendChild(playerDiv);
+    });
+}
+
+function displayInvestments() {
+    const playerInvestmentsDiv = document.getElementById('playerInvestments');
+    playerInvestmentsDiv.innerHTML = '';
+
+    const player = players.find(p => p.name === name);
+    if (player) {
+        const inputDiv = document.createElement('div');
+        inputDiv.innerHTML = `
+            <label for="investment">Invest (0 to ${investAmount}): </label>
+            <input type="number" id="investment" min="0" max="${investAmount}" step="500">
+        `;
+        playerInvestmentsDiv.appendChild(inputDiv);
+    }
+}
+
+function playRound() {
+    const investment = parseFloat(document.getElementById('investment').value);
+    if (isNaN(investment) || investment < 0 || investment > investAmount) {
+        alert(`Please enter a value between 0 and ${investAmount}`);
+        return;
+    }
+
+    socket.send(JSON.stringify({ type: 'invest', room: room, name: name, investment: investment }));
+}
+
+function displayResults(playersData) {
+    const finalBalancesDiv = document.getElementById('finalBalances');
+    finalBalancesDiv.innerHTML = '';
+    playersData.forEach(player => {
+        const playerDiv = document.createElement('div');
+        playerDiv.innerText = `${player.name}: $${player.balance.toFixed(2)}`;
+        finalBalancesDiv.appendChild(playerDiv);
+    });
+    document.getElementById('results').classList.remove('hidden');
+}
