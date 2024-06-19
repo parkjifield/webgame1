@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Investment Game</h1>
+        <div id="game-setup">
+            <label for="room">Room ID: </label>
+            <input type="text" id="room">
+            <label for="name">Your Name: </label>
+            <input type="text" id="name">
+            <button onclick="createRoom()">Create Room</button>
+            <button onclick="joinRoom()">Join Room</button>
+        </div>
+        <div id="game" class="hidden">
+            <h2>Round <span id="roundNumber">1</span></h2>
+            <div id="playerInvestments"></div>
+            <button onclick="playRound()">Invest</button>
+            <div id="game-info"></div>
+        </div>
+        <div id="results" class="hidden">
+            <h2>Final Balances</h2>
+            <div id="finalBalances"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
