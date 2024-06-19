@@ -41,7 +41,7 @@ function createRoom() {
 function joinRoom() {
     room = document.getElementById('room').value;
     name = document.getElementById('name').value;
-    socket = new WebSocket('ws://localhost:8080');
+    socket = new WebSocket('wss://investment-game-server.herokuapp.com');
 
     socket.onopen = () => {
         socket.send(JSON.stringify({ type: 'join_room', room: room, name: name }));
